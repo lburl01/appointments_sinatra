@@ -39,9 +39,12 @@ get '/api/appointments/:physician_id' do
   Physician.find(Appointment.where(physician_id: params['physician_id']).first.physician_id).to_json
 end
 
-get '/api/appointments/all/:physician_id' do
+get '/api/appointments/all_drs/:physician_id' do
   appts = Appointment.select(:dr_name, :physician_id, :patient_id, :appointment_date).joins("FULL OUTER JOIN physicians ON appointments.physician_id = physicians.id").where(physician_id: params['physician_id']).all.to_json
-  # return dr_name where physician_id in appointments is the params['physician_id']
+end
+
+get '/api/appointments/all_pats/:patient_id' do
+  appts = Appointment.select(:dr_name, :physician_id, :patient_id, :patient_name, :appointment_date).joins("FULL OUTER JOIN patients ON appointments.patient_id = patients.id").where(patient_id: params['patient_id']).joins("FULL OUTER JOIN physicians ON appointments.physician_id = physicians.id").all.to_json
 end
 
 post '/api/appointments' do
@@ -57,8 +60,12 @@ end
 put '/api/physicians/update/:id' do
   p = Physician.find_by(id: params[:id])
   p.update(
-		dr_name: 	'Dr. Lori'
+		dr_name: 	params['dr_name']
 		).to_json
+    t = Task.find_by(id: params[:id])
+    if t.nil?
+      halt(404)
+    end
 end
 
 # delete '/api/tasks/:id' do
