@@ -58,20 +58,21 @@ post '/api/physicians' do
 end
 
 put '/api/physicians/update/:id' do
-  p = Physician.find_by(id: params[:id])
-  p.update(
+  phys = Physician.find_by(id: params[:id])
+  phys.update(
 		dr_name: 	params['dr_name']
 		).to_json
-    t = Task.find_by(id: params[:id])
-    if t.nil?
+    if phys.nil?
       halt(404)
     end
 end
 
-# delete '/api/tasks/:id' do
-#   t = Task.find_by(id: params[:id])
-#   if t.nil?
-#     halt(404)
-#   end
-#   t.destroy
-# end
+# WANT TO DELETE ONLY WHEN PHYSICIAN ID AND PATIENT ID ARE A MATCH
+delete '/api/appointments/destroy/:physician_id&:patient_id' do
+  appt = Appointment.where(physician_id: params['physician_id'], patient_id: params['patient_id'])
+  if appt.nil?
+    halt(404)
+  end
+  appt.delete_all
+  status 200
+end
