@@ -40,10 +40,8 @@ get '/api/appointments/:physician_id' do
 end
 
 get '/api/appointments/all/:physician_id' do
-  #appts = Appointment.where(physician_id: params['physician_id']).to_json
-  Physician.find_each do |physician|
-    Appointment.where(physician_id: params['physician_id']).to_json
-  end
+  appts = Appointment.select(:dr_name, :physician_id, :patient_id, :appointment_date).joins("FULL OUTER JOIN physicians ON appointments.physician_id = physicians.id").where(physician_id: params['physician_id']).all.to_json
+  # return dr_name where physician_id in appointments is the params['physician_id']
 end
 
 post '/api/appointments' do
