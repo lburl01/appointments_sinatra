@@ -11,7 +11,7 @@ class CreateAppointments < ActiveRecord::Migration[5.0]
     end
 
     create_join_table :physicians, :patients, table_name: :appointments do |t|
-      t.belongs_to :physician, index: true
+      t.belongs_to :physician, index: true # could get rid of t.references and add foreign_key: true here for each line
       t.belongs_to :patient, index: true
       t.references :physician, index: true, foreign_key: true
       t.references :patient, index: true, foreign_key: true
@@ -20,7 +20,7 @@ class CreateAppointments < ActiveRecord::Migration[5.0]
 
   end
 
-  def down
+  def drop
     drop_table :physicians
     drop_table :patients
     drop_table :physicians, :patients

@@ -4,7 +4,7 @@ require_relative 'environment'
 
 class Physician < ActiveRecord::Base
   has_many :appointments
-  has_many :patients, through: :appointments
+  has_many :patients, through: :appointments # physician has many patients via the appointments joined table
 end
 
 class Appointment < ActiveRecord::Base

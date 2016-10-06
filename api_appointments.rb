@@ -1,8 +1,16 @@
 require 'sinatra'
-require_relative 'model'
-require 'json'
+require_relative 'environment'
 require_relative 'schema'
+require_relative 'model'
+require_relative 'seed'
+require 'json'
 require 'pry'
+
+get '/:name?' do
+  name = params[:name] || 'world'
+  "Hello, #{name}!"
+end
+
 
 get '/api/all/appointments' do
   Appointment.all.to_json
